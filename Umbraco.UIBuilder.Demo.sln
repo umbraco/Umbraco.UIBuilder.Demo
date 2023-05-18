@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.UIBuilder.Demo.Web", "src\Umbraco.UIBuilder.Demo.Web\Umbraco.UIBuilder.Demo.Web.csproj", "{C6726514-9DF3-4423-AF4B-BABE799E1AAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.UIBuilder.Demo", "src\Umbraco.UIBuilder.Demo\Umbraco.UIBuilder.Demo.csproj", "{BA58C88F-F8E8-4A1B-B790-90629BF92455}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6726514-9DF3-4423-AF4B-BABE799E1AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6726514-9DF3-4423-AF4B-BABE799E1AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6726514-9DF3-4423-AF4B-BABE799E1AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6726514-9DF3-4423-AF4B-BABE799E1AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA58C88F-F8E8-4A1B-B790-90629BF92455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA58C88F-F8E8-4A1B-B790-90629BF92455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA58C88F-F8E8-4A1B-B790-90629BF92455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA58C88F-F8E8-4A1B-B790-90629BF92455}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

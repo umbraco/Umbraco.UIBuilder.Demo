@@ -1,0 +1,19 @@
+@using Umbraco.UIBuilder.Demo.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.UIBuilder.Demo.Models.HomePage>
+@{
+	Layout = "Layout.cshtml";
+}
+
+<div class="-mt-20">
+	@foreach (var blogPost in Model.Children.OfType<BlogPostPage>())
+	{
+		<div class="mt-20">
+			<h3 class="text-4xl font-bold mb-2"><a href="@blogPost.Url()">@blogPost.Name</a></h3>
+			<p class="mb-6 pb-4 border-b">Published: @blogPost.CreateDate.ToString("yyyy-MM-dd")</p>
+
+			<div class="prose max-w-full">
+				@blogPost.Body
+			</div>
+		</div>
+	}
+</div>

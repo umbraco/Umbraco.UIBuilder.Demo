@@ -1,0 +1,70 @@
+@using Umbraco.UIBuilder.Demo.Models
+@using Umbraco.UIBuilder.Persistence
+@using Microsoft.Extensions.DependencyInjection
+@using Umbraco.Cms.Core
+@using Umbraco.UIBuilder
+@using Umbraco.UIBuilder.Demo.Web.Controllers
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.UIBuilder.Demo.Models.BlogPostPage>
+@{
+	Layout = "Layout.cshtml";
+	
+	var nodeUdi = Udi.Create(Constants.UdiEntityType.Document, Model.Key).ToString();
+}
+
+<h1 class="text-4xl font-bold mb-2">@Model.Name</h1>
+<p class="mb-6 pb-4 border-b">Published: @Model.CreateDate.ToString("yyyy-MM-dd")</p>
+<div class="prose max-w-full">
+	@Model.Body
+</div>
+
+<h3 class="text-2xl font-bold mt-12">Submit a comment</h3>
+
+@using (Html.BeginUmbracoForm<CommentSurfaceController>("SubmitComment", null, new { @class = "mt-4" }))
+{
+    @if (TempData["CommentStatus"]?.ToString() == "submitted") 
+    {
+        <p class="pb-4">Thank you for your comment</p>
+    }
+    
+    @Html.ValidationSummary(true)
+
+    @Html.TextBox("name", "", new { @class = "border w-full mb-2 p-2", placeholder = "Enter your name" })
+    @Html.TextBox("email", "", new { @class = "border w-full mb-2 p-2", placeholder = "Enter your email" })
+    @Html.TextArea("body", "", new { @class = "border w-full mb-2 p-2", placeholder = "Enter your comment" })
+
+    <button type="submit" class="bg-blue-500 rounded text-white w-full py-2 px-4 hover:bg-blue-600">Submit Comment</button>
+        
+}
+
+<h3 class="text-2xl font-bold mt-12">Comments</h3>
+@{
+	var repoFactory = Context.RequestServices.GetRequiredService<IRepositoryFactory>();
+	var repo = repoFactory.GetRepository<Comment, int>("comments");
+	var commentsOp = repo.GetAll(x => x.NodeUdi == nodeUdi && x.Status == CommentStatus.Approved,
+		x => x.DateCreated, 
+		SortDirection.Descending);
+	
+	if (commentsOp.Success)
+	{
+		var comments = commentsOp.Model.ToList();
+		if (comments.Count > 0)
+		{
+			foreach (var comment in comments)
+			{
+				<div class="py-4 border-b last:border-0 flex w-full">
+					<div class="pr-4">
+						<span class="inline-block w-10 h-10 bg-gray-200 rounded-full"></span>
+					</div>
+					<div class="w-full">
+						<h4 class="font-bold">@comment.Name</h4>
+                        <p>@comment.Body</p>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<p>No comments to display</p>
+		}
+	}
+}

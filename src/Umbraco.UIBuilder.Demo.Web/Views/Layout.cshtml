@@ -1,0 +1,30 @@
+﻿@using Umbraco.UIBuilder.Demo.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+
+    var metaData = Model as MetaData;
+    var advanced = Model as Advanced;
+
+    var homePage = Model.AncestorOrSelf<HomePage>();
+}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@(metaData?.MetaTitle ?? (Model.Id == homePage.Id ? homePage.SiteName + " - "+ homePage.SiteDescription : Model.Name + " | " + homePage.SiteName))</title>
+    <meta name="description" content="@metaData?.MetaDescription" />
+    <meta name="keywords" content="@metaData?.MetaKeywords" />
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    @RenderSection("head", false)
+</head>
+<body class="py-20 px-4">
+<div class="max-w-xl mx-auto">
+    @RenderBody()
+</div>
+@RenderSection("foot", false)
+@Html.Raw(advanced?.RawMarkup)
+@Html.Raw(homePage.SiteRawMarkup)
+</body>
+</html>
