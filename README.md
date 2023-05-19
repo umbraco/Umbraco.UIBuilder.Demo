@@ -1,5 +1,5 @@
 # Umbraco UI Builder Demo
-Demo of Umbraco UI Builder, the back office UI builder for Umbraco
+Demo of Umbraco UI Builder, the back office admin interface builder for Umbraco
 
 ## About
 
