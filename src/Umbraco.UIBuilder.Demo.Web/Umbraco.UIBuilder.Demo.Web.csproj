@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Umbraco.Cms" Version="12.0.0-rc1" />
-        <PackageReference Include="Umbraco.UIBuilder" Version="12.0.0--rc.preview.15.gacd39f5" />
+        <PackageReference Include="Umbraco.Cms" Version="12.0.0-rc2" />
+        <PackageReference Include="Umbraco.UIBuilder" Version="12.0.0-rc1" />
     </ItemGroup>
   
-  <ItemGroup>
+  <ItemGroup> 
     <ProjectReference Include="..\Umbraco.UIBuilder.Demo\Umbraco.UIBuilder.Demo.csproj" />
   </ItemGroup>
 
