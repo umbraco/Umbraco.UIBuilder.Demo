@@ -19,4 +19,4 @@ A repositories section is added with a comments collection to allow full managem
 
 ## How to use
 
-Pull the source for the project and launch the `Umbraco.UIBuilder.Demo.Web` project. You can access the back office at `/umbraco` with admin credentials beign `admin@admin.com` / `password1234`.
+Pull the source for the project and launch the `Umbraco.UIBuilder.Demo.Web` project. You can access the back office at `/umbraco` with admin credentials beign `admin@example.com` / `password1234`.
