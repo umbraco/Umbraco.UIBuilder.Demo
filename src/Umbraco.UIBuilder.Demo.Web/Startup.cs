@@ -69,7 +69,6 @@ namespace Umbraco.UIBuilder.Demo.Web
                 })
                 .WithEndpoints(u =>
                 {
-                    u.UseInstallerEndpoints();
                     u.UseBackOfficeEndpoints();
                     u.UseWebsiteEndpoints();
                 });
