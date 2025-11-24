@@ -42,14 +42,14 @@ jobs:
           fi
           dotnet-CycloneDX "$TARGET_FILE" --output ./sbom --filename bom-dotnet.xml --output-format Xml --enable-github-licenses --github-bearer-token ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract major version from Umbraco.Commerce dependency
-      - name: Extract Umbraco.Commerce major version
+      # Extract major version from Umbraco.UIBuilder dependency
+      - name: Extract Umbraco.UIBuilder major version
         id: extract-version
         run: |
           PROJECT_FILE="src/Umbraco.UIBuilder.Demo.Web/Umbraco.UIBuilder.Demo.Web.csproj"
-          COMMERCE_VERSION=$(grep -oP 'PackageReference Include="Umbraco.UIBuilder" Version="\K[^"]+' "$PROJECT_FILE")
+          UIBuilder_VERSION=$(grep -oP 'PackageReference Include="Umbraco.UIBuilder" Version="\K[^"]+' "$PROJECT_FILE")
           MAJOR_VERSION=$(echo "$UIBuilder_VERSION" | grep -oP '^\d+')
-          echo "commerce_version=$UIBuilder_VERSION"
+          echo "uibuilder_version=$UIBuilder_VERSION"
           echo "major_version=$MAJOR_VERSION"
           echo "major_version=$MAJOR_VERSION" >> $GITHUB_OUTPUT
 
