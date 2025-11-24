@@ -30,6 +30,7 @@
     <PropertyGroup>
         <RazorCompileOnBuild>false</RazorCompileOnBuild>
         <RazorCompileOnPublish>false</RazorCompileOnPublish>
+        <UserSecretsId>a82cfb48-b51e-43f1-a3b2-79a65195ce2a</UserSecretsId>
     </PropertyGroup>
 
 </Project>
