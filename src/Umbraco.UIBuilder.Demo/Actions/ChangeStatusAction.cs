@@ -42,7 +42,8 @@ namespace Umbraco.UIBuilder.Demo.Actions
             {
                 var repo = _repoFactory.GetRepository<Comment, int>(collectionAlias);
 
-                var ids = entityIds.Select(x => int.Parse(x?.ToString())).ToArray();
+                // A List rather than an array: array.Contains() in a where clause fails in UI Builder 17/18
+                var ids = entityIds.Select(x => int.Parse(x?.ToString())).ToList();
                 var result = await repo.GetAllAsync(x => ids.Contains(x.Id), cancellationToken: cancellationToken);
 
                 if (result.Success)

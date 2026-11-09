@@ -9,13 +9,51 @@
 	Layout = "Layout.cshtml";
 	
 	var nodeUdi = Udi.Create(Constants.UdiEntityType.Document, Model.Key).ToString();
+	var author = Model.Author?.FirstOrDefault();
+
+	// Topics the author writes about, from the Author <-> Topic related collection
+	var repoFactory = Context.RequestServices.GetRequiredService<IRepositoryFactory>();
+	var topics = new List<Topic>();
+	if (author != null)
+	{
+		var relationsOp = await repoFactory.GetRepository<Author, int>("authors").GetRelationsByParentIdAsync(author.Id, "authorTopics");
+		var topicIds = relationsOp.Success ? relationsOp.Model.Cast<AuthorTopic>().Select(x => x.TopicId).ToList() : new List<int>();
+		var topicsOp = await repoFactory.GetRepository<Topic, int>("topics").GetAllAsync(x => topicIds.Contains(x.Id), x => x.Name);
+		if (topicsOp.Success)
+		{
+			topics = topicsOp.Model.ToList();
+		}
+	}
 }
 
 <h1 class="text-4xl font-bold mb-2">@Model.Name</h1>
-<p class="mb-6 pb-4 border-b">Published: @Model.CreateDate.ToString("yyyy-MM-dd")</p>
+<p class="mb-6 pb-4 border-b">Published: @Model.CreateDate.ToString("yyyy-MM-dd")@(author != null ? " by " + author.Name : "")</p>
 <div class="prose max-w-full">
 	@Model.Body
 </div>
+
+@if (author != null)
+{
+	<div class="mt-12 p-6 bg-gray-100 rounded flex">
+		<div class="pr-4">
+			<span class="inline-block w-14 h-14 bg-gray-300 rounded-full"></span>
+		</div>
+		<div>
+			<h3 class="text-xl font-bold">@author.Name</h3>
+			<p class="text-gray-600 mb-2">@author.JobTitle</p>
+			<div class="prose">@Html.Raw(author.Bio)</div>
+			@if (topics.Count > 0)
+			{
+				<p class="mt-4 text-sm text-gray-600">Writes about:
+					@foreach (var topic in topics)
+					{
+						<span class="inline-block ml-1 px-2 py-0.5 bg-white border rounded-full text-gray-800">@topic.Name</span>
+					}
+				</p>
+			}
+		</div>
+	</div>
+}
 
 <h3 class="text-2xl font-bold mt-12">Submit a comment</h3>
 
@@ -38,8 +76,8 @@
 
 <h3 class="text-2xl font-bold mt-12">Comments</h3>
 @{
-	var repoFactory = Context.RequestServices.GetRequiredService<IRepositoryFactory>();
 	var repo = repoFactory.GetRepository<Comment, int>("comments");
+	var replyRepo = repoFactory.GetRepository<CommentReply, int>();
 	var commentsOp = await repo.GetAllAsync(x => x.NodeUdi == nodeUdi && x.Status == CommentStatus.Approved,
 		x => x.DateCreated, 
 		SortDirection.Descending);
@@ -47,6 +85,9 @@
 	if (commentsOp.Success)
 	{
 		var comments = commentsOp.Model.ToList();
+		var commentIds = comments.Select(x => x.Id).ToList();
+		var repliesOp = await replyRepo.GetAllAsync(x => commentIds.Contains(x.CommentId), x => x.DateCreated, SortDirection.Ascending);
+		var replies = repliesOp.Success ? repliesOp.Model.ToLookup(x => x.CommentId) : Enumerable.Empty<CommentReply>().ToLookup(x => x.CommentId);
 		if (comments.Count > 0)
 		{
 			foreach (var comment in comments)
@@ -58,6 +99,13 @@
 					<div class="w-full">
 						<h4 class="font-bold">@comment.Name</h4>
                         <p>@comment.Body</p>
+						@foreach (var reply in replies[comment.Id])
+						{
+							<div class="mt-4 pl-4 border-l-4 border-gray-200">
+								<h5 class="font-bold">@reply.AuthorName <span class="font-normal text-gray-500">replied</span></h5>
+								<p>@reply.Body</p>
+							</div>
+						}
 					</div>
 				</div>
 			}
