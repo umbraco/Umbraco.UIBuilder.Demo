@@ -35,6 +35,8 @@ namespace Umbraco.UIBuilder.Demo
 
                         .AddCollection<Comment>(x => x.Id, "Comment", "Comments", "A collection of comments", "icon-chat", "icon-chat", collectionConfig => collectionConfig
                             .SetAlias("comments") 
+                            // Listed on the Repositories section's summary dashboard
+                            .ShowOnSummaryDashboard()
                             .SetNameProperty(c => c.Name)
                             .SetDateCreatedProperty(c => c.DateCreated)
                             .AddSearchableProperty(c => c.Email)
@@ -120,6 +122,7 @@ namespace Umbraco.UIBuilder.Demo
                         .AddFolder("Settings", "icon-settings", folderConfig => folderConfig
                             .AddCollection<Author>(x => x.Id, "Author", "Authors", "The people who write the blog posts", "icon-user", "icon-user", collectionConfig => collectionConfig
                                 .SetAlias("authors")
+                                .ShowOnSummaryDashboard()
                                 .AddRelatedCollection<Author, Topic, AuthorTopic>(x => x.Id, "Topic", "Topics", relationConfig => relationConfig
                                     .SetAlias("authorTopics")
                                     .SetJunction<AuthorTopic>(x => x.AuthorId, x => x.TopicId)
@@ -149,6 +152,7 @@ namespace Umbraco.UIBuilder.Demo
 
                             .AddCollection<Topic>(x => x.Id, "Topic", "Topics", "Subjects the authors write about", "icon-tag", "icon-tag", collectionConfig => collectionConfig
                                 .SetAlias("topics")
+                                .ShowOnSummaryDashboard()
                                 .SetNameProperty(t => t.Name)
                                 .Editor(editorConfig => editorConfig
                                     .AddTab("General", tabConfig => tabConfig
