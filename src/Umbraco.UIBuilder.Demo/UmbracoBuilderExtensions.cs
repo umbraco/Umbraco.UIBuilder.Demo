@@ -1,3 +1,4 @@
+using Umbraco.UIBuilder.Configuration.Editors;
 using Umbraco.UIBuilder.Demo.Actions;
 using Umbraco.UIBuilder.Demo.DataViews;
 using Umbraco.UIBuilder.Demo.Events;
@@ -51,15 +52,22 @@ namespace Umbraco.UIBuilder.Demo
                             .Editor(editorConfig => editorConfig
                                 .AddTab("General", tabConfig => tabConfig
                                     .AddFieldset("General", fieldsetConfig => fieldsetConfig
-                                        .AddField(c => c.NodeUdi).SetLabel("Blog post").SetDataType("Content Picker")
+                                        .AddField(c => c.NodeUdi).SetLabel("Blog post").SetDataType("Content Picker").MakeRequired()
+                                        // The commenter's email can be set when creating a comment, but not changed afterwards
                                         .AddField(c => c.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                            .MakeReadOnly(ctx => ctx.EditorMode == EditorMode.Edit)
                                         .AddField(c => c.Body).SetDataType("Textarea")
                                     )
                                     // Moderation details sit in a sidebar next to the comment itself
                                     .Sidebar(sidebarConfig => sidebarConfig
                                         .AddFieldset("Moderation", fieldsetConfig => fieldsetConfig
                                             .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
-                                            .AddField(c => c.DateCreated).SetLabel("Posted").MakeReadOnly(d => d.ToString("d MMM yyyy, HH:mm"))
+                                            // Read only, and hidden when creating a comment as there's no date yet.
+                                            // Uses the field config overload: a chained .SetVisibility() would apply to the whole fieldset.
+                                            .AddField(c => c.DateCreated, fieldConfig => fieldConfig
+                                                .SetLabel("Posted")
+                                                .MakeReadOnly(d => d.ToString("d MMM yyyy, HH:mm"))
+                                                .SetVisibility(ctx => ctx.EditorMode == EditorMode.Edit))
                                         )
                                     )
                                 )
