@@ -25,6 +25,7 @@ namespace Umbraco.UIBuilder.Demo
             builder.AddNotificationHandler<EntityDeletedNotification, DeleteCommentRepliesHandler>();
             builder.AddNotificationHandler<EntityDeletedNotification, DeleteAuthorTopicLinksHandler>();
             builder.AddNotificationHandler<EntitySavingNotification, SetReplyAuthorNameHandler>();
+            builder.AddNotificationHandler<EntitySavedNotification, LogCommentStatusChangeHandler>();
             
             builder.AddUIBuilder(cfg =>
             {
@@ -114,6 +115,32 @@ namespace Umbraco.UIBuilder.Demo
                                         // Many-to-many: picks topics, stored in the AuthorTopic junction table
                                         fieldsetConfig.AddRelatedCollectionPickerField<Topic>("authorTopics", "Topic Picker", "Writes about");
                                     })
+                                )
+                            )
+                        )
+
+                        .AddCollection<ModerationLogEntry>(x => x.Id, "Log Entry", "Moderation Log", "Every change to a comment's status", "icon-list", "icon-list", collectionConfig => collectionConfig
+                            .SetAlias("moderationLog")
+                            .SetNameProperty(e => e.CommentName, "Comment")
+                            .SetDateCreatedProperty(e => e.DateCreated)
+                            .SetSortProperty(e => e.DateCreated, SortDirection.Descending)
+                            .AddFilterableProperty(e => e.ToStatus)
+                            // Entries are written by the system, so editors can view them but not change them
+                            .MakeReadOnly()
+                            .ListView(listViewConfig => listViewConfig
+                                .AddField(e => e.FromStatus).SetHeading("From")
+                                .AddField(e => e.ToStatus).SetHeading("To")
+                                .AddField(e => e.ChangedBy).SetHeading("Changed by")
+                                .AddField(e => e.DateCreated).SetHeading("When").SetFormat((v, e) => v.ToString("d MMM yyyy, HH:mm"))
+                            )
+                            .Editor(editorConfig => editorConfig
+                                .AddTab("General", tabConfig => tabConfig
+                                    .AddFieldset("General", fieldsetConfig => fieldsetConfig
+                                        .AddField(e => e.FromStatus).SetLabel("From").MakeReadOnly()
+                                        .AddField(e => e.ToStatus).SetLabel("To").MakeReadOnly()
+                                        .AddField(e => e.ChangedBy).SetLabel("Changed by").MakeReadOnly()
+                                        .AddField(e => e.DateCreated).SetLabel("When").MakeReadOnly(d => d.ToString("d MMM yyyy, HH:mm"))
+                                    )
                                 )
                             )
                         )
