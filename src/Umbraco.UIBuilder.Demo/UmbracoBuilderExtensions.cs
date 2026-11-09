@@ -22,6 +22,7 @@ namespace Umbraco.UIBuilder.Demo
             builder.Services.AddSingleton<UdiToIntContentPickerValueMapper>();
             builder.AddNotificationAsyncHandler<UmbracoApplicationStartingNotification, DemoMigrations>();
             builder.AddNotificationHandler<EntityDeletedNotification, DeleteCommentRepliesHandler>();
+            builder.AddNotificationHandler<EntityDeletedNotification, DeleteAuthorTopicLinksHandler>();
             builder.AddNotificationHandler<EntitySavingNotification, SetReplyAuthorNameHandler>();
             
             builder.AddUIBuilder(cfg =>
@@ -76,6 +77,10 @@ namespace Umbraco.UIBuilder.Demo
 
                         .AddCollection<Author>(x => x.Id, "Author", "Authors", "The people who write the blog posts", "icon-user", "icon-user", collectionConfig => collectionConfig
                             .SetAlias("authors")
+                            .AddRelatedCollection<Author, Topic, AuthorTopic>(x => x.Id, "Topic", "Topics", relationConfig => relationConfig
+                                .SetAlias("authorTopics")
+                                .SetJunction<AuthorTopic>(x => x.AuthorId, x => x.TopicId)
+                            )
                             .SetNameProperty(a => a.Name)
                             .SetDateCreatedProperty(a => a.DateCreated)
                             .AddSearchableProperty(a => a.Email)
@@ -85,10 +90,27 @@ namespace Umbraco.UIBuilder.Demo
                             )
                             .Editor(editorConfig => editorConfig
                                 .AddTab("General", tabConfig => tabConfig
+                                    .AddFieldset("General", fieldsetConfig =>
+                                    {
+                                        fieldsetConfig
+                                            .AddField(a => a.JobTitle).SetLabel("Job title")
+                                            .AddField(a => a.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                            .AddField(a => a.Bio).SetDataType("Richtext editor");
+
+                                        // Many-to-many: picks topics, stored in the AuthorTopic junction table
+                                        fieldsetConfig.AddRelatedCollectionPickerField<Topic>("authorTopics", "Topic Picker", "Writes about");
+                                    })
+                                )
+                            )
+                        )
+
+                        .AddCollection<Topic>(x => x.Id, "Topic", "Topics", "Subjects the authors write about", "icon-tag", "icon-tag", collectionConfig => collectionConfig
+                            .SetAlias("topics")
+                            .SetNameProperty(t => t.Name)
+                            .Editor(editorConfig => editorConfig
+                                .AddTab("General", tabConfig => tabConfig
                                     .AddFieldset("General", fieldsetConfig => fieldsetConfig
-                                        .AddField(a => a.JobTitle).SetLabel("Job title")
-                                        .AddField(a => a.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
-                                        .AddField(a => a.Bio).SetDataType("Richtext editor")
+                                        .AddField(t => t.Name).MakeRequired()
                                     )
                                 )
                             )
