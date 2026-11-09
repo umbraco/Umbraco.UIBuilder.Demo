@@ -44,7 +44,8 @@ namespace Umbraco.UIBuilder.Demo.Migrations
 
             migrationPlan.From(string.Empty)
                 .To<AddAuthorTable>("author-table")
-                .To<AddCommentReplyTable>("comment-reply-table");
+                .To<AddCommentReplyTable>("comment-reply-table")
+                .To<AddTopicTables>("topic-tables");
 
             var upgrader = new Upgrader(migrationPlan);
             await upgrader.ExecuteAsync(_migrationPlanExecutor, _coreScopeProvider, _keyValueService);

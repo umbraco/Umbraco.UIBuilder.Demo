@@ -17,7 +17,7 @@ On the content section there is a new "Pending Comments" dashboard that lists co
 
 A repositories section is added with a comments collection to allow full management of all comments regardless of which blog post they are associated with. Each comment has a replies child collection, shown as a tab on the comment editor. Replies are written by one of the blog's authors, picked with the same author picker, and are deleted along with their comment.
 
-The section also holds an authors collection. Blog posts pick their author with the UI Builder entity picker, and the post page shows the author's name, job title and bio.
+The section also holds an authors collection. Blog posts pick their author with the UI Builder entity picker, and the post page shows the author's name, job title, bio and the topics they write about. Topics are their own collection, linked to authors many-to-many through a related collection and picked on the author editor.
 
 ## How to use
 

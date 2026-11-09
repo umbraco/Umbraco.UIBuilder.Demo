@@ -10,6 +10,20 @@
 	
 	var nodeUdi = Udi.Create(Constants.UdiEntityType.Document, Model.Key).ToString();
 	var author = Model.Author?.FirstOrDefault();
+
+	// Topics the author writes about, from the Author <-> Topic related collection
+	var repoFactory = Context.RequestServices.GetRequiredService<IRepositoryFactory>();
+	var topics = new List<Topic>();
+	if (author != null)
+	{
+		var relationsOp = repoFactory.GetRepository<Author, int>("authors").GetRelationsByParentId(author.Id, "authorTopics");
+		var topicIds = relationsOp.Success ? relationsOp.Model.Cast<AuthorTopic>().Select(x => x.TopicId).ToList() : new List<int>();
+		var topicsOp = repoFactory.GetRepository<Topic, int>("topics").GetAll(x => topicIds.Contains(x.Id), x => x.Name);
+		if (topicsOp.Success)
+		{
+			topics = topicsOp.Model.ToList();
+		}
+	}
 }
 
 <h1 class="text-4xl font-bold mb-2">@Model.Name</h1>
@@ -28,6 +42,15 @@
 			<h3 class="text-xl font-bold">@author.Name</h3>
 			<p class="text-gray-600 mb-2">@author.JobTitle</p>
 			<div class="prose">@Html.Raw(author.Bio)</div>
+			@if (topics.Count > 0)
+			{
+				<p class="mt-4 text-sm text-gray-600">Writes about:
+					@foreach (var topic in topics)
+					{
+						<span class="inline-block ml-1 px-2 py-0.5 bg-white border rounded-full text-gray-800">@topic.Name</span>
+					}
+				</p>
+			}
 		</div>
 	</div>
 }
@@ -53,7 +76,6 @@
 
 <h3 class="text-2xl font-bold mt-12">Comments</h3>
 @{
-	var repoFactory = Context.RequestServices.GetRequiredService<IRepositoryFactory>();
 	var repo = repoFactory.GetRepository<Comment, int>("comments");
 	var replyRepo = repoFactory.GetRepository<CommentReply, int>();
 	var commentsOp = repo.GetAll(x => x.NodeUdi == nodeUdi && x.Status == CommentStatus.Approved,
