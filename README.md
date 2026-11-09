@@ -19,4 +19,14 @@ A repositories section is added with a comments collection to allow full managem
 
 ## How to use
 
-Pull the source for the project and launch the `Umbraco.UIBuilder.Demo.Web` project. You can access the back office at `/umbraco` with admin credentials beign `admin@example.com` / `password1234`.
+Pull the source for the project and launch the `Umbraco.UIBuilder.Demo.Web` project. You can access the back office at `/umbraco` with admin credentials being `admin@example.com` / `password1234`.
+
+## Versions
+
+Each supported Umbraco UI Builder major has its own branch:
+
+| Branch | Umbraco UI Builder |
+| --- | --- |
+| `main` | Latest stable major |
+| `support/{major}.x` | Older majors still in support (e.g. `support/17.x`) |
+| `release/{version}` | The next major, on prerelease packages |

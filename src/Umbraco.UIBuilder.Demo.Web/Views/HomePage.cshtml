@@ -5,7 +5,7 @@
 }
 
 <div class="-mt-20">
-	@foreach (var blogPost in Model.Children.OfType<BlogPostPage>())
+	@foreach (var blogPost in Model.Children().OfType<BlogPostPage>())
 	{
 		<div class="mt-20">
 			<h3 class="text-4xl font-bold mb-2"><a href="@blogPost.Url()">@blogPost.Name</a></h3>

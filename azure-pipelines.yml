@@ -1,0 +1,37 @@
+name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+# The demo isn't released as a package, so this pipeline only generates its SBOM (license check)
+# and uploads it to Dependency-Track, using the shared Umbraco.Build SBOM template.
+trigger:
+  branches:
+    include:
+      - main
+      - support/*
+
+pr: none
+
+resources:
+  repositories:
+    - repository: build
+      type: github
+      name: umbraco/Umbraco.Build
+      endpoint: umbraco
+
+variables:
+  - group: dependency-track
+  - name: productName
+    value: Umbraco.UIBuilder.Demo
+  - name: solution
+    value: Umbraco.UIBuilder.Demo.sln
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+
+  - template: devops/templates/generate-sbom-template.yml@build
+    parameters:
+      # No version.json, so upload to project Umbraco.UIBuilder.Demo with the Umbraco UI Builder
+      # major this branch targets as the version
+      sbom_project_version: '18'
