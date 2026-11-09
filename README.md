@@ -15,7 +15,9 @@ On the content section there is a new "Pending Comments" dashboard that lists co
 
 ### Section
 
-A repositories section is added with a comments collection to allow full management of all comments regardless of which blog post they are associated with.
+A repositories section is added with a comments collection to allow full management of all comments regardless of which blog post they are associated with. Each comment has a replies child collection, shown as a tab on the comment editor.
+
+The section also holds an authors collection. Blog posts pick their author with the UI Builder entity picker, and the post page shows the author's name, job title and bio.
 
 ## How to use
 

@@ -487,3 +487,6 @@ $RECYCLE.BIN/
 
 *.sqlite.db-wal
 *.sqlite.db-shm
+
+# ModelsBuilder out-of-date marker
+ood.flag

@@ -1,5 +1,6 @@
 using Umbraco.UIBuilder.Demo.Actions;
 using Umbraco.UIBuilder.Demo.DataViews;
+using Umbraco.UIBuilder.Demo.Migrations;
 using Umbraco.UIBuilder.Demo.Models;
 using Umbraco.UIBuilder.Demo.ValueMappers;
 using Umbraco.UIBuilder.Extensions;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Notifications;
 
 namespace Umbraco.UIBuilder.Demo
 {
@@ -16,6 +18,7 @@ namespace Umbraco.UIBuilder.Demo
         public static IUmbracoBuilder AddUIBuilderDemo(this IUmbracoBuilder builder)
         {
             builder.Services.AddSingleton<UdiToIntContentPickerValueMapper>();
+            builder.AddNotificationAsyncHandler<UmbracoApplicationStartingNotification, DemoMigrations>();
             
             builder.AddUIBuilder(cfg =>
             {
@@ -47,6 +50,40 @@ namespace Umbraco.UIBuilder.Demo
                                         .AddField(c => c.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
                                         .AddField(c => c.Body).SetDataType("Textarea")
                                         .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
+                                    )
+                                )
+                            )
+                            .AddChildCollection<CommentReply>(x => x.Id, x => x.CommentId, "Reply", "Replies", "Replies to this comment", "icon-reply-arrow", "icon-reply-arrow", childCollectionConfig => childCollectionConfig
+                                .SetNameProperty(r => r.Name, "Replied by")
+                                .SetDateCreatedProperty(r => r.DateCreated)
+                                .ListView(listViewConfig => listViewConfig
+                                    .AddField(r => r.Body)
+                                )
+                                .Editor(editorConfig => editorConfig
+                                    .AddTab("General", tabConfig => tabConfig
+                                        .AddFieldset("General", fieldsetConfig => fieldsetConfig
+                                            .AddField(r => r.Body).SetDataType("Textarea").MakeRequired()
+                                        )
+                                    )
+                                )
+                            )
+                        )
+
+                        .AddCollection<Author>(x => x.Id, "Author", "Authors", "The people who write the blog posts", "icon-user", "icon-user", collectionConfig => collectionConfig
+                            .SetAlias("authors")
+                            .SetNameProperty(a => a.Name)
+                            .SetDateCreatedProperty(a => a.DateCreated)
+                            .AddSearchableProperty(a => a.Email)
+                            .ListView(listViewConfig => listViewConfig
+                                .AddField(a => a.JobTitle).SetHeading("Job title")
+                                .AddField(a => a.Email)
+                            )
+                            .Editor(editorConfig => editorConfig
+                                .AddTab("General", tabConfig => tabConfig
+                                    .AddFieldset("General", fieldsetConfig => fieldsetConfig
+                                        .AddField(a => a.JobTitle).SetLabel("Job title")
+                                        .AddField(a => a.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                        .AddField(a => a.Bio).SetDataType("Richtext editor")
                                     )
                                 )
                             )
