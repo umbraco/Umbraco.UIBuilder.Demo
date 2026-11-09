@@ -6475,6 +6475,175 @@
             ],
             "type": "object"
         },
+        "ManifestEntityCreateOptionActionFolderKind": {
+            "properties": {
+                "alias": {
+                    "description": "The alias of the extension, ensure it is unique",
+                    "type": "string"
+                },
+                "api": {
+                    "type": "string"
+                },
+                "conditions": {
+                    "description": "Set the conditions for when the extension should be loaded",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/UmbEntityUniqueConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbEntityTypeConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbLanguageUserPermissionConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbIsRoutableContextConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbPropertyHasValueConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbWorkspaceContentTypeAliasConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbWorkspaceContentTypeUniqueConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbEntityContentTypeUniqueConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/WorkspaceAliasConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbWorkspaceEntityIsNewConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbWorkspaceEntityTypeConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbContentWorkspaceIsLoadedConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/SectionAliasConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbSectionUserPermissionConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/TreeAliasConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/CollectionAliasConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbCollectionHasItemsConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbIsServerProductionModeConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbCurrentUserGroupIdConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbIsAdminConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbConditionConfigBase%3C%22Umb.Condition.User.AllowChangePassword%22%3E"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbConditionConfigBase%3C%22Umb.Condition.User.AllowDeleteAction%22%3E"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbConditionConfigBase%3C%22Umb.Condition.User.AllowDisableAction%22%3E"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbConditionConfigBase%3C%22Umb.Condition.User.AllowEnableAction%22%3E"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbConditionConfigBase%3C%22Umb.Condition.User.AllowExternalLoginAction%22%3E"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbConditionConfigBase%3C%22Umb.Condition.User.AllowMfaAction%22%3E"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbConditionConfigBase%3C%22Umb.Condition.User.AllowUnlockAction%22%3E"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbFallbackUserPermissionConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbInModalConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/DelayConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/SwitchConditionConfig"
+                            },
+                            {
+                                "$ref": "#/definitions/UmbConditionConfigBase%3Cstring%3E"
+                            }
+                        ]
+                    },
+                    "type": "array"
+                },
+                "forEntityTypes": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "js": {
+                    "description": "The file location of the javascript file to load",
+                    "type": "string"
+                },
+                "kind": {
+                    "const": "folder",
+                    "description": "The kind of the extension, used to group extensions together",
+                    "type": "string"
+                },
+                "meta": {
+                    "$ref": "#/definitions/MetaEntityCreateOptionActionFolderKind"
+                },
+                "name": {
+                    "description": "The friendly name of the extension",
+                    "type": "string"
+                },
+                "overwrites": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "description": "Define one or more extension aliases that this extension should overwrite."
+                },
+                "type": {
+                    "const": "entityCreateOptionAction",
+                    "description": "The type of extension such as dashboard etc...",
+                    "type": "string"
+                },
+                "weight": {
+                    "description": "Extensions such as dashboards are ordered by weight with higher numbers being first in the list",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "alias",
+                "forEntityTypes",
+                "kind",
+                "meta",
+                "name",
+                "type"
+            ],
+            "type": "object"
+        },
         "ManifestEntityItemRef<MetaEntityItemRef>": {
             "properties": {
                 "alias": {
@@ -10593,47 +10762,6 @@
             "required": [
                 "alias",
                 "forEntityTypes",
-                "name",
-                "type"
-            ],
-            "type": "object"
-        },
-        "ManifestTreeStore": {
-            "description": "Manifest for a tree store.",
-            "properties": {
-                "alias": {
-                    "description": "The alias of the extension, ensure it is unique",
-                    "type": "string"
-                },
-                "api": {
-                    "type": "string"
-                },
-                "js": {
-                    "description": "The file location of the javascript file to load",
-                    "type": "string"
-                },
-                "kind": {
-                    "description": "The kind of the extension, used to group extensions together",
-                    "examples": [
-                        "button"
-                    ]
-                },
-                "name": {
-                    "description": "The friendly name of the extension",
-                    "type": "string"
-                },
-                "type": {
-                    "const": "treeStore",
-                    "description": "The type of extension such as dashboard etc...",
-                    "type": "string"
-                },
-                "weight": {
-                    "description": "Extensions such as dashboards are ordered by weight with higher numbers being first in the list",
-                    "type": "number"
-                }
-            },
-            "required": [
-                "alias",
                 "name",
                 "type"
             ],
@@ -14867,9 +14995,6 @@
                     "type": "string"
                 }
             },
-            "required": [
-                "icon"
-            ],
             "type": "object"
         },
         "MetaEntityBulkActionDeleteKind": {
@@ -14899,7 +15024,6 @@
             },
             "required": [
                 "detailRepositoryAlias",
-                "icon",
                 "itemRepositoryAlias"
             ],
             "type": "object"
@@ -15137,7 +15261,6 @@
             },
             "required": [
                 "bulkMoveRepositoryAlias",
-                "icon",
                 "treeAlias"
             ],
             "type": "object"
@@ -15165,8 +15288,7 @@
                 }
             },
             "required": [
-                "bulkTrashRepositoryAlias",
-                "icon"
+                "bulkTrashRepositoryAlias"
             ],
             "type": "object"
         },
@@ -15208,6 +15330,47 @@
                 }
             },
             "required": [
+                "icon",
+                "label"
+            ],
+            "type": "object"
+        },
+        "MetaEntityCreateOptionActionFolderKind": {
+            "properties": {
+                "additionalOptions": {
+                    "description": "The action requires additional input from the user.\nA dialog will prompt the user for more information or to make a choice.",
+                    "type": "{boolean}"
+                },
+                "description": {
+                    "description": "A description of the action to be performed",
+                    "examples": [
+                        "Create a document type with a template",
+                        "Create a document from a blueprint"
+                    ],
+                    "type": "string"
+                },
+                "folderRepositoryAlias": {
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "An icon to represent the action to be performed",
+                    "examples": [
+                        "icon-box",
+                        "icon-grid"
+                    ],
+                    "type": "string"
+                },
+                "label": {
+                    "description": "The friendly name of the action to perform",
+                    "examples": [
+                        "Create with Template",
+                        "Create from Blueprint"
+                    ],
+                    "type": "string"
+                }
+            },
+            "required": [
+                "folderRepositoryAlias",
                 "icon",
                 "label"
             ],
@@ -16987,6 +17150,9 @@
                         "$ref": "#/definitions/ManifestEntityActionUpdateFolderKind"
                     },
                     {
+                        "$ref": "#/definitions/ManifestEntityCreateOptionActionFolderKind"
+                    },
+                    {
                         "$ref": "#/definitions/ManifestMenu"
                     },
                     {
@@ -17213,9 +17379,6 @@
                     },
                     {
                         "$ref": "#/definitions/ManifestStore"
-                    },
-                    {
-                        "$ref": "#/definitions/ManifestTreeStore"
                     },
                     {
                         "$ref": "#/definitions/ManifestItemStore"

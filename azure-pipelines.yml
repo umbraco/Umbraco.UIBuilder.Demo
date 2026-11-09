@@ -34,4 +34,4 @@ steps:
     parameters:
       # No version.json, so upload to project Umbraco.UIBuilder.Demo with the Umbraco UI Builder
       # major this branch targets as the version
-      sbom_project_version: '17'
+      sbom_project_version: '18'
