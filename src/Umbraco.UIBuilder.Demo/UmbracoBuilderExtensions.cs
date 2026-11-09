@@ -51,10 +51,16 @@ namespace Umbraco.UIBuilder.Demo
                             .Editor(editorConfig => editorConfig
                                 .AddTab("General", tabConfig => tabConfig
                                     .AddFieldset("General", fieldsetConfig => fieldsetConfig
-                                        .AddField(c => c.NodeUdi).SetLabel("Node").SetDataType("Content Picker")
+                                        .AddField(c => c.NodeUdi).SetLabel("Blog post").SetDataType("Content Picker")
                                         .AddField(c => c.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
                                         .AddField(c => c.Body).SetDataType("Textarea")
-                                        .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
+                                    )
+                                    // Moderation details sit in a sidebar next to the comment itself
+                                    .Sidebar(sidebarConfig => sidebarConfig
+                                        .AddFieldset("Moderation", fieldsetConfig => fieldsetConfig
+                                            .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
+                                            .AddField(c => c.DateCreated).SetLabel("Posted").MakeReadOnly(d => d.ToString("d MMM yyyy, HH:mm"))
+                                        )
                                     )
                                 )
                             )
