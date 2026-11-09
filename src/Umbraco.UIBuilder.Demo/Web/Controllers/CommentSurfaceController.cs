@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System;
 using Umbraco.UIBuilder.Demo.Models;
 using Umbraco.UIBuilder.Demo.Web.Dtos;
@@ -26,7 +27,7 @@ namespace Umbraco.UIBuilder.Demo.Web.Controllers
             _repoFactory = repoFactory;
         }
 
-        public IActionResult SubmitComment(SubmitCommentDto model)
+        public async Task<IActionResult> SubmitComment(SubmitCommentDto model)
         {
             if (!ModelState.IsValid)
                 return CurrentUmbracoPage();
@@ -44,7 +45,7 @@ namespace Umbraco.UIBuilder.Demo.Web.Controllers
                     Status = CommentStatus.Pending
                 };
 
-                repo.Save(comment);
+                await repo.SaveAsync(comment);
 
                 TempData["CommentStatus"] = "submitted";
 

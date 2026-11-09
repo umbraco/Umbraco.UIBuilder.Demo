@@ -40,7 +40,7 @@
 @{
 	var repoFactory = Context.RequestServices.GetRequiredService<IRepositoryFactory>();
 	var repo = repoFactory.GetRepository<Comment, int>("comments");
-	var commentsOp = repo.GetAll(x => x.NodeUdi == nodeUdi && x.Status == CommentStatus.Approved,
+	var commentsOp = await repo.GetAllAsync(x => x.NodeUdi == nodeUdi && x.Status == CommentStatus.Approved,
 		x => x.DateCreated, 
 		SortDirection.Descending);
 	
