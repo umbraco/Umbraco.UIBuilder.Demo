@@ -9,7 +9,7 @@
 	{
 		<div class="mt-20">
 			<h3 class="text-4xl font-bold mb-2"><a href="@blogPost.Url()">@blogPost.Name</a></h3>
-			<p class="mb-6 pb-4 border-b">Published: @blogPost.CreateDate.ToString("yyyy-MM-dd")</p>
+			<p class="mb-6 pb-4 border-b">Published: @blogPost.CreateDate.ToString("yyyy-MM-dd")@(blogPost.Author?.FirstOrDefault() is Author author ? " by " + author.Name : "")</p>
 
 			<div class="prose max-w-full">
 				@blogPost.Body
