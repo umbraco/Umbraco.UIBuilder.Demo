@@ -33,125 +33,130 @@ namespace Umbraco.UIBuilder.Demo
                 cfg.AddSectionAfter("media", "Repositories", sectionConfig => sectionConfig
                     .Tree(treeConfig => treeConfig
 
-                        .AddCollection<Comment>(x => x.Id, "Comment", "Comments", "A collection of comments", "icon-chat", "icon-chat", collectionConfig => collectionConfig
-                            .SetAlias("comments") 
-                            .SetNameProperty(c => c.Name)
-                            .SetDateCreatedProperty(c => c.DateCreated)
-                            .AddSearchableProperty(c => c.Email)
-                            .AddFilterableProperty(c => c.Email)
-                            .AddFilterableProperty(c => c.Status)
-                            .AddCard("Pending Comments", "icon-chat", x => x.Status == CommentStatus.Pending).SetColor("orange")
-                            .AddCard("Total Comments", "icon-chat", x => x.Status == CommentStatus.Pending || x.Status == CommentStatus.Approved || x.Status == CommentStatus.Rejected)
-                            .SetDataViewsBuilder<CommentStatusDataViewsBuilder>()
-                            .AddAction<ChangeStatusAction>()
-                            .AddAction<ExportEntityAction>()
-                            .AddAction<ImportEntityAction>()
-                            .ListView(listViewConfig => listViewConfig
-                                .AddField(c => c.Email)
-                                .AddField(c => c.Status)
-                            )
-                            .Editor(editorConfig => editorConfig
-                                .AddTab("General", tabConfig => tabConfig
-                                    .AddFieldset("General", fieldsetConfig => fieldsetConfig
-                                        .AddField(c => c.NodeUdi).SetLabel("Blog post").SetDataType("Content Picker").MakeRequired()
-                                        // The commenter's email can be set when creating a comment, but not changed afterwards
-                                        .AddField(c => c.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
-                                            .MakeReadOnly(ctx => ctx.EditorMode == EditorMode.Edit)
-                                        .AddField(c => c.Body).SetDataType("Textarea")
-                                    )
-                                    // Moderation details sit in a sidebar next to the comment itself
-                                    .Sidebar(sidebarConfig => sidebarConfig
-                                        .AddFieldset("Moderation", fieldsetConfig => fieldsetConfig
-                                            .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
-                                            // Read only, and hidden when creating a comment as there's no date yet.
-                                            // Uses the field config overload: a chained .SetVisibility() would apply to the whole fieldset.
-                                            .AddField(c => c.DateCreated, fieldConfig => fieldConfig
-                                                .SetLabel("Posted")
-                                                .MakeReadOnly(d => d.ToString("d MMM yyyy, HH:mm"))
-                                                .SetVisibility(ctx => ctx.EditorMode == EditorMode.Edit))
-                                        )
-                                    )
-                                )
-                            )
-                            .AddChildCollection<CommentReply>(x => x.Id, x => x.CommentId, "Reply", "Replies", "Replies to this comment", "icon-reply-arrow", "icon-reply-arrow", childCollectionConfig => childCollectionConfig
-                                .SetNameFormat(r => r.AuthorName ?? "New reply")
-                                .SetDateCreatedProperty(r => r.DateCreated)
+                        // Folders group related collections in the tree
+                        .AddFolder("Moderation", "icon-chat", folderConfig => folderConfig
+                            .AddCollection<Comment>(x => x.Id, "Comment", "Comments", "A collection of comments", "icon-chat", "icon-chat", collectionConfig => collectionConfig
+                                .SetAlias("comments") 
+                                .SetNameProperty(c => c.Name)
+                                .SetDateCreatedProperty(c => c.DateCreated)
+                                .AddSearchableProperty(c => c.Email)
+                                .AddFilterableProperty(c => c.Email)
+                                .AddFilterableProperty(c => c.Status)
+                                .AddCard("Pending Comments", "icon-chat", x => x.Status == CommentStatus.Pending).SetColor("orange")
+                                .AddCard("Total Comments", "icon-chat", x => x.Status == CommentStatus.Pending || x.Status == CommentStatus.Approved || x.Status == CommentStatus.Rejected)
+                                .SetDataViewsBuilder<CommentStatusDataViewsBuilder>()
+                                .AddAction<ChangeStatusAction>()
+                                .AddAction<ExportEntityAction>()
+                                .AddAction<ImportEntityAction>()
                                 .ListView(listViewConfig => listViewConfig
-                                    .AddField(r => r.Body)
+                                    .AddField(c => c.Email)
+                                    .AddField(c => c.Status)
                                 )
                                 .Editor(editorConfig => editorConfig
                                     .AddTab("General", tabConfig => tabConfig
                                         .AddFieldset("General", fieldsetConfig => fieldsetConfig
-                                            .AddField(r => r.AuthorId).SetLabel("Author").SetDataType("Author Picker").MakeRequired()
-                                            .AddField(r => r.Body).SetDataType("Textarea").MakeRequired()
+                                            .AddField(c => c.NodeUdi).SetLabel("Blog post").SetDataType("Content Picker").MakeRequired()
+                                            // The commenter's email can be set when creating a comment, but not changed afterwards
+                                            .AddField(c => c.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                                .MakeReadOnly(ctx => ctx.EditorMode == EditorMode.Edit)
+                                            .AddField(c => c.Body).SetDataType("Textarea")
+                                        )
+                                        // Moderation details sit in a sidebar next to the comment itself
+                                        .Sidebar(sidebarConfig => sidebarConfig
+                                            .AddFieldset("Moderation", fieldsetConfig => fieldsetConfig
+                                                .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
+                                                // Read only, and hidden when creating a comment as there's no date yet.
+                                                // Uses the field config overload: a chained .SetVisibility() would apply to the whole fieldset.
+                                                .AddField(c => c.DateCreated, fieldConfig => fieldConfig
+                                                    .SetLabel("Posted")
+                                                    .MakeReadOnly(d => d.ToString("d MMM yyyy, HH:mm"))
+                                                    .SetVisibility(ctx => ctx.EditorMode == EditorMode.Edit))
+                                            )
+                                        )
+                                    )
+                                )
+                                .AddChildCollection<CommentReply>(x => x.Id, x => x.CommentId, "Reply", "Replies", "Replies to this comment", "icon-reply-arrow", "icon-reply-arrow", childCollectionConfig => childCollectionConfig
+                                    .SetNameFormat(r => r.AuthorName ?? "New reply")
+                                    .SetDateCreatedProperty(r => r.DateCreated)
+                                    .ListView(listViewConfig => listViewConfig
+                                        .AddField(r => r.Body)
+                                    )
+                                    .Editor(editorConfig => editorConfig
+                                        .AddTab("General", tabConfig => tabConfig
+                                            .AddFieldset("General", fieldsetConfig => fieldsetConfig
+                                                .AddField(r => r.AuthorId).SetLabel("Author").SetDataType("Author Picker").MakeRequired()
+                                                .AddField(r => r.Body).SetDataType("Textarea").MakeRequired()
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+
+                            .AddCollection<ModerationLogEntry>(x => x.Id, "Log Entry", "Moderation Log", "Every change to a comment's status", "icon-list", "icon-list", collectionConfig => collectionConfig
+                                .SetAlias("moderationLog")
+                                .SetNameProperty(e => e.CommentName, "Comment")
+                                .SetDateCreatedProperty(e => e.DateCreated)
+                                .SetSortProperty(e => e.DateCreated, SortDirection.Descending)
+                                .AddFilterableProperty(e => e.ToStatus)
+                                // Entries are written by the system, so editors can view them but not change them
+                                .MakeReadOnly()
+                                .ListView(listViewConfig => listViewConfig
+                                    .AddField(e => e.FromStatus).SetHeading("From")
+                                    .AddField(e => e.ToStatus).SetHeading("To")
+                                    .AddField(e => e.ChangedBy).SetHeading("Changed by")
+                                    .AddField(e => e.DateCreated).SetHeading("When").SetFormat((v, e) => v.ToString("d MMM yyyy, HH:mm"))
+                                )
+                                .Editor(editorConfig => editorConfig
+                                    .AddTab("General", tabConfig => tabConfig
+                                        .AddFieldset("General", fieldsetConfig => fieldsetConfig
+                                            .AddField(e => e.FromStatus).SetLabel("From").MakeReadOnly()
+                                            .AddField(e => e.ToStatus).SetLabel("To").MakeReadOnly()
+                                            .AddField(e => e.ChangedBy).SetLabel("Changed by").MakeReadOnly()
+                                            .AddField(e => e.DateCreated).SetLabel("When").MakeReadOnly(d => d.ToString("d MMM yyyy, HH:mm"))
                                         )
                                     )
                                 )
                             )
                         )
 
-                        .AddCollection<Author>(x => x.Id, "Author", "Authors", "The people who write the blog posts", "icon-user", "icon-user", collectionConfig => collectionConfig
-                            .SetAlias("authors")
-                            .AddRelatedCollection<Author, Topic, AuthorTopic>(x => x.Id, "Topic", "Topics", relationConfig => relationConfig
-                                .SetAlias("authorTopics")
-                                .SetJunction<AuthorTopic>(x => x.AuthorId, x => x.TopicId)
-                            )
-                            .SetNameProperty(a => a.Name)
-                            .SetDateCreatedProperty(a => a.DateCreated)
-                            .AddSearchableProperty(a => a.Email)
-                            .ListView(listViewConfig => listViewConfig
-                                .AddField(a => a.JobTitle).SetHeading("Job title")
-                                .AddField(a => a.Email)
-                            )
-                            .Editor(editorConfig => editorConfig
-                                .AddTab("General", tabConfig => tabConfig
-                                    .AddFieldset("General", fieldsetConfig =>
-                                    {
-                                        fieldsetConfig
-                                            .AddField(a => a.JobTitle).SetLabel("Job title")
-                                            .AddField(a => a.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
-                                            .AddField(a => a.Bio).SetDataType("Richtext editor");
-
-                                        // Many-to-many: picks topics, stored in the AuthorTopic junction table
-                                        fieldsetConfig.AddRelatedCollectionPickerField<Topic>("authorTopics", "Topic Picker", "Writes about");
-                                    })
+                        .AddFolder("Blog", "icon-users", folderConfig => folderConfig
+                            .AddCollection<Author>(x => x.Id, "Author", "Authors", "The people who write the blog posts", "icon-user", "icon-user", collectionConfig => collectionConfig
+                                .SetAlias("authors")
+                                .AddRelatedCollection<Author, Topic, AuthorTopic>(x => x.Id, "Topic", "Topics", relationConfig => relationConfig
+                                    .SetAlias("authorTopics")
+                                    .SetJunction<AuthorTopic>(x => x.AuthorId, x => x.TopicId)
                                 )
-                            )
-                        )
+                                .SetNameProperty(a => a.Name)
+                                .SetDateCreatedProperty(a => a.DateCreated)
+                                .AddSearchableProperty(a => a.Email)
+                                .ListView(listViewConfig => listViewConfig
+                                    .AddField(a => a.JobTitle).SetHeading("Job title")
+                                    .AddField(a => a.Email)
+                                )
+                                .Editor(editorConfig => editorConfig
+                                    .AddTab("General", tabConfig => tabConfig
+                                        .AddFieldset("General", fieldsetConfig =>
+                                        {
+                                            fieldsetConfig
+                                                .AddField(a => a.JobTitle).SetLabel("Job title")
+                                                .AddField(a => a.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                                .AddField(a => a.Bio).SetDataType("Richtext editor");
 
-                        .AddCollection<ModerationLogEntry>(x => x.Id, "Log Entry", "Moderation Log", "Every change to a comment's status", "icon-list", "icon-list", collectionConfig => collectionConfig
-                            .SetAlias("moderationLog")
-                            .SetNameProperty(e => e.CommentName, "Comment")
-                            .SetDateCreatedProperty(e => e.DateCreated)
-                            .SetSortProperty(e => e.DateCreated, SortDirection.Descending)
-                            .AddFilterableProperty(e => e.ToStatus)
-                            // Entries are written by the system, so editors can view them but not change them
-                            .MakeReadOnly()
-                            .ListView(listViewConfig => listViewConfig
-                                .AddField(e => e.FromStatus).SetHeading("From")
-                                .AddField(e => e.ToStatus).SetHeading("To")
-                                .AddField(e => e.ChangedBy).SetHeading("Changed by")
-                                .AddField(e => e.DateCreated).SetHeading("When").SetFormat((v, e) => v.ToString("d MMM yyyy, HH:mm"))
-                            )
-                            .Editor(editorConfig => editorConfig
-                                .AddTab("General", tabConfig => tabConfig
-                                    .AddFieldset("General", fieldsetConfig => fieldsetConfig
-                                        .AddField(e => e.FromStatus).SetLabel("From").MakeReadOnly()
-                                        .AddField(e => e.ToStatus).SetLabel("To").MakeReadOnly()
-                                        .AddField(e => e.ChangedBy).SetLabel("Changed by").MakeReadOnly()
-                                        .AddField(e => e.DateCreated).SetLabel("When").MakeReadOnly(d => d.ToString("d MMM yyyy, HH:mm"))
+                                            // Many-to-many: picks topics, stored in the AuthorTopic junction table
+                                            fieldsetConfig.AddRelatedCollectionPickerField<Topic>("authorTopics", "Topic Picker", "Writes about");
+                                        })
                                     )
                                 )
                             )
-                        )
 
-                        .AddCollection<Topic>(x => x.Id, "Topic", "Topics", "Subjects the authors write about", "icon-tag", "icon-tag", collectionConfig => collectionConfig
-                            .SetAlias("topics")
-                            .SetNameProperty(t => t.Name)
-                            .Editor(editorConfig => editorConfig
-                                .AddTab("General", tabConfig => tabConfig
-                                    .AddFieldset("General", fieldsetConfig => fieldsetConfig
-                                        .AddField(t => t.Name).MakeRequired()
+                            .AddCollection<Topic>(x => x.Id, "Topic", "Topics", "Subjects the authors write about", "icon-tag", "icon-tag", collectionConfig => collectionConfig
+                                .SetAlias("topics")
+                                .SetNameProperty(t => t.Name)
+                                .Editor(editorConfig => editorConfig
+                                    .AddTab("General", tabConfig => tabConfig
+                                        .AddFieldset("General", fieldsetConfig => fieldsetConfig
+                                            .AddField(t => t.Name).MakeRequired()
+                                        )
                                     )
                                 )
                             )
