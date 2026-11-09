@@ -26,14 +26,16 @@ namespace Umbraco.UIBuilder.Demo.Migrations
             Database.Insert(new CommentReply
             {
                 CommentId = 1,
-                Name = "Hannah Brooks",
+                AuthorId = 1,
+                AuthorName = "Hannah Brooks",
                 Body = "Thanks Matt, glad it helped!",
                 DateCreated = new DateTime(2025, 3, 4)
             });
             Database.Insert(new CommentReply
             {
                 CommentId = 14,
-                Name = "Sam Okafor",
+                AuthorId = 2,
+                AuthorName = "Sam Okafor",
                 Body = "Thanks James, glad you enjoyed it!",
                 DateCreated = new DateTime(2025, 3, 5)
             });

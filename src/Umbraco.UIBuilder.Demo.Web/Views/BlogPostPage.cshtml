@@ -80,7 +80,7 @@
 						@foreach (var reply in replies[comment.Id])
 						{
 							<div class="mt-4 pl-4 border-l-4 border-gray-200">
-								<h5 class="font-bold">@reply.Name <span class="font-normal text-gray-500">replied</span></h5>
+								<h5 class="font-bold">@reply.AuthorName <span class="font-normal text-gray-500">replied</span></h5>
 								<p>@reply.Body</p>
 							</div>
 						}

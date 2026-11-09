@@ -15,7 +15,15 @@ namespace Umbraco.UIBuilder.Demo.Models
 
         public int CommentId { get; set; }
 
-        public string Name { get; set; }
+        /// <summary>
+        /// The author who replied, picked with the Author Picker.
+        /// </summary>
+        public int AuthorId { get; set; }
+
+        /// <summary>
+        /// The author's name, copied from the author on save (see <c>SetReplyAuthorNameHandler</c>).
+        /// </summary>
+        public string AuthorName { get; set; }
 
         [SpecialDbType(SpecialDbTypes.NVARCHARMAX)]
         public string Body { get; set; }

@@ -22,6 +22,7 @@ namespace Umbraco.UIBuilder.Demo
             builder.Services.AddSingleton<UdiToIntContentPickerValueMapper>();
             builder.AddNotificationAsyncHandler<UmbracoApplicationStartingNotification, DemoMigrations>();
             builder.AddNotificationHandler<EntityDeletedNotification, DeleteCommentRepliesHandler>();
+            builder.AddNotificationHandler<EntitySavingNotification, SetReplyAuthorNameHandler>();
             
             builder.AddUIBuilder(cfg =>
             {
@@ -57,7 +58,7 @@ namespace Umbraco.UIBuilder.Demo
                                 )
                             )
                             .AddChildCollection<CommentReply>(x => x.Id, x => x.CommentId, "Reply", "Replies", "Replies to this comment", "icon-reply-arrow", "icon-reply-arrow", childCollectionConfig => childCollectionConfig
-                                .SetNameProperty(r => r.Name, "Replied by")
+                                .SetNameFormat(r => r.AuthorName ?? "New reply")
                                 .SetDateCreatedProperty(r => r.DateCreated)
                                 .ListView(listViewConfig => listViewConfig
                                     .AddField(r => r.Body)
@@ -65,6 +66,7 @@ namespace Umbraco.UIBuilder.Demo
                                 .Editor(editorConfig => editorConfig
                                     .AddTab("General", tabConfig => tabConfig
                                         .AddFieldset("General", fieldsetConfig => fieldsetConfig
+                                            .AddField(r => r.AuthorId).SetLabel("Author").SetDataType("Author Picker").MakeRequired()
                                             .AddField(r => r.Body).SetDataType("Textarea").MakeRequired()
                                         )
                                     )
