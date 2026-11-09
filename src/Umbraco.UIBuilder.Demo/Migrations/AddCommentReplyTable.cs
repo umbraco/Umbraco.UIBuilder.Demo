@@ -34,7 +34,7 @@ namespace Umbraco.UIBuilder.Demo.Migrations
             {
                 CommentId = 14,
                 Name = "Sam Okafor",
-                Body = "Great question. We'll cover that in a follow-up post.",
+                Body = "Thanks James, glad you enjoyed it!",
                 DateCreated = new DateTime(2025, 3, 5)
             });
 

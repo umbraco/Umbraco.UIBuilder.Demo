@@ -1,8 +1,10 @@
 using Umbraco.UIBuilder.Demo.Actions;
 using Umbraco.UIBuilder.Demo.DataViews;
+using Umbraco.UIBuilder.Demo.Events;
 using Umbraco.UIBuilder.Demo.Migrations;
 using Umbraco.UIBuilder.Demo.Models;
 using Umbraco.UIBuilder.Demo.ValueMappers;
+using Umbraco.UIBuilder.Events;
 using Umbraco.UIBuilder.Extensions;
 using Umbraco.UIBuilder.Infrastructure.Configuration.Actions;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,7 @@ namespace Umbraco.UIBuilder.Demo
         {
             builder.Services.AddSingleton<UdiToIntContentPickerValueMapper>();
             builder.AddNotificationAsyncHandler<UmbracoApplicationStartingNotification, DemoMigrations>();
+            builder.AddNotificationHandler<EntityDeletedNotification, DeleteCommentRepliesHandler>();
             
             builder.AddUIBuilder(cfg =>
             {
