@@ -5,6 +5,8 @@ using Umbraco.UIBuilder.Demo.ValueMappers;
 using Umbraco.UIBuilder.Persistence;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Umbraco.UIBuilder.Demo.Actions
 {
@@ -34,14 +36,15 @@ namespace Umbraco.UIBuilder.Demo.Actions
                 || ctx.ActionType == ActionType.Row;
         }
 
-        public override ActionResult Execute(string collectionAlias, object[] entityIds, ChangeStatusSettings settings)
+        public override async Task<ActionResult> ExecuteAsync(string collectionAlias, object[] entityIds, ChangeStatusSettings settings, CancellationToken cancellationToken = default)
         {
             try
             {
                 var repo = _repoFactory.GetRepository<Comment, int>(collectionAlias);
 
-                var ids = entityIds.Select(x => int.Parse(x?.ToString())).ToArray();
-                var result = repo.GetAll(x => ids.Contains(x.Id));
+                // A List rather than an array: array.Contains() in a where clause fails in UI Builder 17/18
+                var ids = entityIds.Select(x => int.Parse(x?.ToString())).ToList();
+                var result = await repo.GetAllAsync(x => ids.Contains(x.Id), cancellationToken: cancellationToken);
 
                 if (result.Success)
                 {
@@ -49,7 +52,7 @@ namespace Umbraco.UIBuilder.Demo.Actions
                     {
                         entity.Status = settings.Status;
 
-                        repo.Save(entity);
+                        await repo.SaveAsync(entity, cancellationToken: cancellationToken);
                     }
                 }
 
