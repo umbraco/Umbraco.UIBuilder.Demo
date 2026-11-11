@@ -65,7 +65,7 @@ namespace Umbraco.UIBuilder.Demo
                                     .AddFieldset("General", fieldsetConfig => fieldsetConfig
                                         .AddField(c => c.NodeUdi).SetLabel("Blog post").SetDataType("Content Picker").MakeRequired()
                                         // The commenter's email can be set when creating a comment, but not changed afterwards
-                                        .AddField(c => c.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                        .AddField(c => c.Email).SetDataType("Email Address")
                                             .MakeReadOnly(ctx => ctx.EditorMode == EditorMode.Edit)
                                         .AddField(c => c.Body).SetDataType("Textarea")
                                     )
@@ -148,7 +148,7 @@ namespace Umbraco.UIBuilder.Demo
                                         {
                                             fieldsetConfig
                                                 .AddField(a => a.JobTitle).SetLabel("Job title")
-                                                .AddField(a => a.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                                .AddField(a => a.Email).SetDataType("Email Address")
                                                 .AddField(a => a.Bio).SetDataType("Richtext editor");
 
                                             // Many-to-many: picks topics, stored in the AuthorTopic junction table
@@ -209,7 +209,7 @@ namespace Umbraco.UIBuilder.Demo
                                 .AddTab("General", tabConfig => tabConfig
                                     .AddFieldset("General", fieldsetConfig => fieldsetConfig
                                         .AddField(c => c.NodeUdi).SetLabel("Node").SetDataType("Content Picker")
-                                        .AddField(c => c.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                        .AddField(c => c.Email).SetDataType("Email Address")
                                         .AddField(c => c.Body).SetDataType("Textarea")
                                         .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
                                     )
@@ -235,7 +235,7 @@ namespace Umbraco.UIBuilder.Demo
                                 .Editor(editorConfig => editorConfig
                                     .AddTab("General", tabConfig => tabConfig
                                         .AddFieldset("General", fieldsetConfig => fieldsetConfig
-                                            .AddField(c => c.Email).SetValidationRegex("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+")
+                                            .AddField(c => c.Email).SetDataType("Email Address")
                                             .AddField(c => c.Body).SetDataType("Textarea")
                                             .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
                                         )
