@@ -1,5 +1,7 @@
 using Umbraco.UIBuilder.Configuration.Editors;
 using Umbraco.UIBuilder.Demo.Actions;
+using Umbraco.UIBuilder.Demo.Cards;
+using Umbraco.UIBuilder.Demo.FilterOptions;
 using Umbraco.UIBuilder.Demo.DataViews;
 using Umbraco.UIBuilder.Demo.Events;
 using Umbraco.UIBuilder.Demo.Migrations;
@@ -42,8 +44,14 @@ namespace Umbraco.UIBuilder.Demo
                             .AddSearchableProperty(c => c.Email)
                             .AddFilterableProperty(c => c.Email)
                             .AddFilterableProperty(c => c.Status)
+                            // Options come from an async options builder
+                            .AddFilterableProperty(c => c.DateCreated, filterConfig => filterConfig
+                                .SetLabel("Posted")
+                                .SetOptionsBuilder<CommentPostedFilterOptions>())
                             .AddCard("Pending Comments", "icon-chat", x => x.Status == CommentStatus.Pending).SetColor("orange")
                             .AddCard("Total Comments", "icon-chat", x => x.Status == CommentStatus.Pending || x.Status == CommentStatus.Approved || x.Status == CommentStatus.Rejected)
+                            // A custom card class that works out its value asynchronously
+                            .AddCard<CommentsThisWeekCard>()
                             .SetDataViewsBuilder<CommentStatusDataViewsBuilder>()
                             .AddAction<ChangeStatusAction>()
                             .AddAction<ExportEntityAction>()
@@ -147,6 +155,21 @@ namespace Umbraco.UIBuilder.Demo
                                             fieldsetConfig.AddRelatedCollectionPickerField<Topic>("authorTopics", "Topic Picker", "Writes about");
                                         })
                                     )
+                                    // One field per editor type: pickers, dropdowns, sliders and numbers with a valid range
+                                    .AddTab("Profile", tabConfig => tabConfig
+                                        .AddFieldset("Profile", fieldsetConfig => fieldsetConfig
+                                            .AddField(a => a.Photo).SetDataType("Author Photo")
+                                            .AddField(a => a.Website).SetDataType("Author Website")
+                                            .AddField(a => a.Role).SetDataType("Author Role")
+                                            .AddField(a => a.Languages).SetDataType("Author Languages")
+                                        )
+                                        .AddFieldset("Writing", fieldsetConfig => fieldsetConfig
+                                            .AddField(a => a.YearsWriting).SetLabel("Years writing").SetDataType("Years Writing")
+                                            .AddField(a => a.PostLength).SetLabel("Preferred post length (minutes)").SetDataType("Post Length")
+                                            .AddField(a => a.PostsPerMonth).SetLabel("Posts per month").SetDataType("Posts Per Month")
+                                            .AddField(a => a.ReaderRating).SetLabel("Reader rating").SetDataType("Reader Rating")
+                                        )
+                                    )
                                 )
                             )
 
@@ -169,7 +192,8 @@ namespace Umbraco.UIBuilder.Demo
 
                 cfg.WithSection(Constants.Applications.Content, withSectionConfig => withSectionConfig
 
-                    .AddDashboard("Pending Comments", dashboardConfig => dashboardConfig
+                    // Positioned before Umbraco's Redirect URL Management dashboard
+                    .AddDashboardBefore("contentRedirectManager", "Pending Comments", dashboardConfig => dashboardConfig
                         .SetCollection<Comment>(x => x.Id, "Comment", "Comments", "A collection of comments", "icon-chat", "icon-chat", collectionConfig => collectionConfig
                             .SetAlias("pendingComments") // All collection aliases must be globally unique
                             .SetNameProperty(c => c.Name)
@@ -223,6 +247,33 @@ namespace Umbraco.UIBuilder.Demo
 
                     )
 
+                );
+
+                // A member's comments, as a context app on the member editor. Its alias comes from its name, so it
+                // can't also be called "Comments" like the content one.
+                cfg.WithSection(Constants.Applications.Members, withSectionConfig => withSectionConfig
+                    .WithTree(Constants.Trees.Members, withTreeConfig => withTreeConfig
+                        .AddContextAppAfter("umbContent", "Posted Comments", "icon-chat", ctxAppConfig => ctxAppConfig
+                            .AddCollection<Comment>(x => x.Id, x => x.MemberId, "Comment", "Comments", "Comments posted by this member", "icon-chat", "icon-chat", collectionConfig => collectionConfig
+                                .SetAlias("memberComments")
+                                .SetNameProperty(c => c.Name)
+                                .SetDateCreatedProperty(c => c.DateCreated)
+                                .DisableCreate()
+                                .ListView(listViewConfig => listViewConfig
+                                    .AddField(c => c.Body)
+                                    .AddField(c => c.Status)
+                                )
+                                .Editor(editorConfig => editorConfig
+                                    .AddTab("General", tabConfig => tabConfig
+                                        .AddFieldset("General", fieldsetConfig => fieldsetConfig
+                                            .AddField(c => c.Body).SetDataType("Textarea")
+                                            .AddField(c => c.Status).SetDataType("Comment Status").SetValueMapper<EnumDropdownValueMapper<CommentStatus>>()
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
                 );
 
             });

@@ -1,6 +1,8 @@
-﻿using System;
+using System;
+using System.ComponentModel;
 using NPoco;
 using Umbraco.Cms.Infrastructure.Persistence.DatabaseAnnotations;
+using Umbraco.UIBuilder.Core.Converters;
 
 namespace Umbraco.UIBuilder.Demo.Models
 {
@@ -16,6 +18,13 @@ namespace Umbraco.UIBuilder.Demo.Models
         public string Body { get; set; }
         public DateTime DateCreated { get; set; }
         public CommentStatus Status { get; set; }
+
+        /// <summary>
+        /// The member who posted the comment, or 0 for a guest. Lets the Members section show a member's comments.
+        /// </summary>
+        [TypeConverter(typeof(EntityIdentifierToIntTypeConverter))]
+        [Constraint(Default = "0")]
+        public int MemberId { get; set; }
     }
 
     public enum CommentStatus

@@ -46,7 +46,9 @@ namespace Umbraco.UIBuilder.Demo.Migrations
                 .To<AddAuthorTable>("author-table")
                 .To<AddCommentReplyTable>("comment-reply-table")
                 .To<AddTopicTables>("topic-tables")
-                .To<AddModerationLogTable>("moderation-log-table");
+                .To<AddModerationLogTable>("moderation-log-table")
+                .To<AddAuthorProfileFields>("author-profile-fields")
+                .To<AddCommentMemberId>("comment-member-id");
 
             var upgrader = new Upgrader(migrationPlan);
             await upgrader.ExecuteAsync(_migrationPlanExecutor, _coreScopeProvider, _keyValueService);

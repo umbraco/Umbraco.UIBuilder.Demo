@@ -8,6 +8,7 @@ using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Logging;
 using Umbraco.Cms.Core.Routing;
+using Umbraco.Cms.Core.Security;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Infrastructure.Persistence;
@@ -18,13 +19,15 @@ namespace Umbraco.UIBuilder.Demo.Web.Controllers
     public class CommentSurfaceController : SurfaceController
     {
         private readonly IRepositoryFactory _repoFactory;
+        private readonly IMemberManager _memberManager;
 
         public CommentSurfaceController(IUmbracoContextAccessor umbracoContextAccessor, IUmbracoDatabaseFactory databaseFactory,
             ServiceContext services, AppCaches appCaches, IProfilingLogger profilingLogger, IPublishedUrlProvider publishedUrlProvider,
-            IRepositoryFactory repoFactory)
+            IRepositoryFactory repoFactory, IMemberManager memberManager)
             : base(umbracoContextAccessor, databaseFactory, services, appCaches, profilingLogger, publishedUrlProvider)
         {
             _repoFactory = repoFactory;
+            _memberManager = memberManager;
         }
 
         public async Task<IActionResult> SubmitComment(SubmitCommentDto model)
@@ -36,13 +39,17 @@ namespace Umbraco.UIBuilder.Demo.Web.Controllers
             {
                 var repo = _repoFactory.GetRepository<Comment, int>();
 
+                // Comments from a logged in member are linked to them, so they show on the member in the back office
+                var member = await _memberManager.GetCurrentMemberAsync();
+
                 var comment = new Comment 
                 {
                     NodeUdi = Udi.Create(Constants.UdiEntityType.Document, CurrentPage.Key).ToString(),
                     Name = model.Name,
                     Email = model.Email,
                     Body = model.Body,
-                    Status = CommentStatus.Pending
+                    Status = CommentStatus.Pending,
+                    MemberId = member != null && int.TryParse(member.Id, out var memberId) ? memberId : 0
                 };
 
                 await repo.SaveAsync(comment);
