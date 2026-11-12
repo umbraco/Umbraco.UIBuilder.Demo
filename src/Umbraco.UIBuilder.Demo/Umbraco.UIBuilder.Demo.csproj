@@ -5,7 +5,7 @@
     </PropertyGroup>
 
 	<PropertyGroup>
-		<UmbracoCmsPackageVersion>19.0.0-beta1</UmbracoCmsPackageVersion>
+		<UmbracoCmsPackageVersion>19.0.0-rc1</UmbracoCmsPackageVersion>
 	</PropertyGroup>
 	
     <ItemGroup>
