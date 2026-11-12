@@ -12,7 +12,7 @@
       <PackageReference Include="Umbraco.Cms.Core" Version="$(UmbracoCmsPackageVersion)" />
       <PackageReference Include="Umbraco.Cms.Infrastructure" Version="$(UmbracoCmsPackageVersion)" />
       <PackageReference Include="Umbraco.Cms.Web.Website" Version="$(UmbracoCmsPackageVersion)" />
-      <PackageReference Include="Umbraco.UIBuilder.Startup" Version="19.0.0-beta.1" />
+      <PackageReference Include="Umbraco.UIBuilder.Startup" Version="19.0.0-rc.1" />
     </ItemGroup>
 
 </Project>
