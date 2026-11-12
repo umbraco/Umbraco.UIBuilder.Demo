@@ -2,13 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>net11.0</TargetFramework>
-        <!-- Works around an SDK 11 rc.3 static web assets compression failure with Umbraco.Cms.StaticAssets 19.0.0-beta1. Recheck on the next SDK. -->
+        <!-- Works around a static web assets compression failure ("Endpoints not found for related asset")
+             with SDK 11.0.100 and Umbraco.Cms.StaticAssets 19.0.0-rc1. Recheck on the next CMS release. -->
         <CompressionEnabled>false</CompressionEnabled>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Umbraco.Cms" Version="19.0.0-beta1" />
-        <PackageReference Include="Umbraco.UIBuilder" Version="19.0.0-beta.1" />
+        <PackageReference Include="Umbraco.Cms" Version="19.0.0-rc1" />
+        <PackageReference Include="Umbraco.UIBuilder" Version="19.0.0-rc.1" />
     </ItemGroup>
   
   <ItemGroup> 
