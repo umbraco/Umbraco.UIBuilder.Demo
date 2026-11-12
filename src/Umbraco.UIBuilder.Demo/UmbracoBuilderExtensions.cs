@@ -61,6 +61,8 @@ namespace Umbraco.UIBuilder.Demo
                                 .AddField(c => c.Status)
                             )
                             .Editor(editorConfig => editorConfig
+                                // A small modal shows the form vertically, with the sidebar under the main fields
+                                .SetModalSize(EditorModalSize.Small)
                                 .AddTab("General", tabConfig => tabConfig
                                     .AddFieldset("General", fieldsetConfig => fieldsetConfig
                                         .AddField(c => c.NodeUdi).SetLabel("Blog post").SetDataType("Content Picker").MakeRequired()
@@ -90,6 +92,8 @@ namespace Umbraco.UIBuilder.Demo
                                     .AddField(r => r.Body)
                                 )
                                 .Editor(editorConfig => editorConfig
+                                    // Replies are short, so they open in a small modal
+                                    .SetModalSize(EditorModalSize.Small)
                                     .AddTab("General", tabConfig => tabConfig
                                         .AddFieldset("General", fieldsetConfig => fieldsetConfig
                                             .AddField(r => r.AuthorId).SetLabel("Author").SetDataType("Author Picker").MakeRequired()
